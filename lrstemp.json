@@ -1,90 +1,155 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "location": {
-            "value": "eastus2"
-        },
-        "storageAccountName": {
-            "value": "partylikeits1999"
-        },
-        "accountType": {
-            "value": "Standard_LRS"
-        },
-        "kind": {
-            "value": "StorageV2"
-        },
-        "accessTier": {
-            "value": "Hot"
-        },
-        "minimumTlsVersion": {
-            "value": "TLS1_2"
-        },
-        "supportsHttpsTrafficOnly": {
-            "value": true
-        },
-        "publicNetworkAccess": {
-            "value": "Enabled"
-        },
-        "allowBlobPublicAccess": {
-            "value": true
-        },
-        "allowSharedKeyAccess": {
-            "value": true
-        },
-        "allowCrossTenantReplication": {
-            "value": true
-        },
-        "defaultOAuth": {
-            "value": false
-        },
-        "networkAclsBypass": {
-            "value": "AzureServices"
-        },
-        "networkAclsDefaultAction": {
-            "value": "Allow"
-        },
-        "dnsEndpointType": {
-            "value": "Standard"
-        },
-        "keySource": {
-            "value": "Microsoft.Storage"
-        },
-        "encryptionEnabled": {
-            "value": true
-        },
-        "keyTypeForTableAndQueueEncryption": {
-            "value": "Account"
-        },
-        "infrastructureEncryptionEnabled": {
-            "value": false
-        },
-        "isContainerRestoreEnabled": {
-            "value": false
-        },
-        "isBlobSoftDeleteEnabled": {
-            "value": true
-        },
-        "blobSoftDeleteRetentionDays": {
-            "value": 7
-        },
-        "isContainerSoftDeleteEnabled": {
-            "value": true
-        },
-        "containerSoftDeleteRetentionDays": {
-            "value": 7
-        },
-        "changeFeed": {
-            "value": false
-        },
-        "isVersioningEnabled": {
-            "value": false
-        },
-        "isShareSoftDeleteEnabled": {
-            "value": true
-        },
-        "shareSoftDeleteRetentionDays": {
-            "value": 7
+        "storageAccounts_defaultazstorageaccount_name": {
+            "defaultValue": "partylikeits1999",
+            "type": "String"
         }
-    }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-09-01",
+            "name": "[parameters('storageAccounts_defaultazstorageaccount_name')]",
+            "location": "eastus2",
+            "tags": {
+                "defaultstorageaccount": "storage"
+            },
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "dnsEndpointType": "Standard",
+                "defaultToOAuthAuthentication": false,
+                "publicNetworkAccess": "Enabled",
+                "allowCrossTenantReplication": true,
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": true,
+                "allowSharedKeyAccess": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "requireInfrastructureEncryption": false,
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_defaultazstorageaccount_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_defaultazstorageaccount_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "changeFeed": {
+                    "enabled": false
+                },
+                "restorePolicy": {
+                    "enabled": false
+                },
+                "containerDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": true,
+                    "days": 7
+                },
+                "isVersioningEnabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_defaultazstorageaccount_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_defaultazstorageaccount_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "shareDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_defaultazstorageaccount_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_defaultazstorageaccount_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_defaultazstorageaccount_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_defaultazstorageaccount_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2021-09-01",
+            "name": "[concat(parameters('storageAccounts_defaultazstorageaccount_name'), '/default/cmds')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_defaultazstorageaccount_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_defaultazstorageaccount_name'))]"
+            ],
+            "properties": {
+                "accessTier": "TransactionOptimized",
+                "shareQuota": 6,
+                "enabledProtocols": "SMB"
+            }
+        }
+    ]
 }
