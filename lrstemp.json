@@ -6,7 +6,7 @@
             "value": "eastus2"
         },
         "storageAccountName": {
-            "value": "storageName" "test"
+            "value": "test"
         },
         "accountType": {
             "value": "Standard_LRS"
