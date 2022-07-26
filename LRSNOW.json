@@ -1,90 +1,18 @@
-{
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.6",
-    "parameters": {
-        "location": {
-            "value": "eastus2"
-        },
-        "storageAccountName": {
-            "value": "partylikeits1999"
-        },
-        "accountType": {
-            "value": "Standard_LRS"
-        },
-        "kind": {
-            "value": "StorageV2"
-        },
-        "accessTier": {
-            "value": "Hot"
-        },
-        "minimumTlsVersion": {
-            "value": "TLS1_2"
-        },
-        "supportsHttpsTrafficOnly": {
-            "value": true
-        },
-        "publicNetworkAccess": {
-            "value": "Enabled"
-        },
-        "allowBlobPublicAccess": {
-            "value": true
-        },
-        "allowSharedKeyAccess": {
-            "value": true
-        },
-        "allowCrossTenantReplication": {
-            "value": true
-        },
-        "defaultOAuth": {
-            "value": false
-        },
-        "networkAclsBypass": {
-            "value": "AzureServices"
-        },
-        "networkAclsDefaultAction": {
-            "value": "Allow"
-        },
-        "dnsEndpointType": {
-            "value": "Standard"
-        },
-        "keySource": {
-            "value": "Microsoft.Storage"
-        },
-        "encryptionEnabled": {
-            "value": true
-        },
-        "keyTypeForTableAndQueueEncryption": {
-            "value": "Account"
-        },
-        "infrastructureEncryptionEnabled": {
-            "value": false
-        },
-        "isContainerRestoreEnabled": {
-            "value": false
-        },
-        "isBlobSoftDeleteEnabled": {
-            "value": true
-        },
-        "blobSoftDeleteRetentionDays": {
-            "value": 7
-        },
-        "isContainerSoftDeleteEnabled": {
-            "value": true
-        },
-        "containerSoftDeleteRetentionDays": {
-            "value": 7
-        },
-        "changeFeed": {
-            "value": false
-        },
-        "isVersioningEnabled": {
-            "value": false
-        },
-        "isShareSoftDeleteEnabled": {
-            "value": true
-        },
-        "shareSoftDeleteRetentionDays": {
-            "value": 7
-        }
-    }
-}
+{ 
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#", 
+    "contentVersion": "1.0.0.8", 
+    "resources": [ 
+    { 
+      "apiVersion": "2016-01-01", 
+      "type": "Microsoft.Storage/storageAccounts", 
+      "name": "[concat('storage', uniqueString(resourceGroup().id))]", 
+      "location": "[resourceGroup().location]", 
+    
+      "sku": { 
+        "name": "Standard_LRS" 
+      }, 
+      "kind": "Storage", 
+      "properties": { } 
+    } 
+    ] 
+} 
