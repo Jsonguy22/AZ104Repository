@@ -6,7 +6,7 @@
             "value": "eastus2"
         },
         "storageAccountName": {
-            "value": ""name": "[concat('storage', uniqueString(resourceGroup().id))]","
+            "value": "name": "[concat('storage', uniqueString(resourceGroup().id))]",
         },
         "accountType": {
             "value": "Standard_LRS"
