@@ -1,12 +1,12 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json",
     "contentVersion": "1.0.0.1",
     "parameters": {
         "location": {
             "value": "eastus2"
         },
         "storageAccountName": {
-            "value": "storageName": "[concat(toLower(parameters('storageNamePrefix')), uniqueString(resourceGroup().id))]"
+            "value": "storageName": "test"
         },
         "accountType": {
             "value": "Standard_LRS"
